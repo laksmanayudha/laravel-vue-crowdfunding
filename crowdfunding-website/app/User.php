@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Str;
+use App\Traits\UsesUuid;
 
 class User extends Authenticatable
 {
@@ -20,19 +20,8 @@ class User extends Authenticatable
         'name', 'email', 'password', 'username', 'role_id', 'photo_profile'
     ];
     protected $primaryKey = 'id';
-    protected $keyType = 'string';
-    public $incrementing = false;
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function($model){
-            if( empty($model->{$model->getKeyName()}) ){
-                $model->{$model->getKeyName()} = Str::uuid();
-            }
-        });
-    }
+    use UsesUuid;
 
     /**
      * The attributes that should be hidden for arrays.
@@ -54,20 +43,7 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo('App\Role');
+        return $this->belongsTo('App\Role', 'role_id');
     }
 }
-
-
-// User::create(
-//     [
-//         'name' =>'Laksmana Yudha', 
-//         'email' => 'laksmanayudha22@gmail.com', 
-//         'password' => '12345678', 
-//         'username' => 'laksmanayudha', 
-//         'role_id' => 'c0e93ac6-61b2-4dfc-bb79-1316be3b0502'
-//     ])
-
-
-// Role::create(['name' => 'admin'])
 
