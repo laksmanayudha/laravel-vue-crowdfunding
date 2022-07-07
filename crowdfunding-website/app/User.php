@@ -49,9 +49,9 @@ class User extends Authenticatable
             $model->role_id = $model->get_role_user();
         });
 
-        static::creating(function($model){
-            $model->generate_otp_code();
-        })
+        // static::creating(function($model){
+        //     $model->generate_otp_code();
+        // });
     }
 
     public function get_role_user()
