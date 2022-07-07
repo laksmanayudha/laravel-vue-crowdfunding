@@ -22,7 +22,7 @@ Route::get('/route-1', function(){
     return 'masuk ke route 1, email sudah di verifikasi';
 })->middleware(['auth', 'email_verified']);
 
-Route::middleware(['auth', 'is_admin'])->group(function(){
+Route::middleware(['auth', 'email_verified', 'is_admin'])->group(function(){
     Route::get('/route-2', function(){
         return 'masuk ke route 2, halaman khusus admin';
     });
