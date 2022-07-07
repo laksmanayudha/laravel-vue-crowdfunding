@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +16,16 @@
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/route-1', function(){
+    return 'masuk ke route 1, email sudah di verifikasi';
+})->middleware(['auth', 'email_verified']);
+
+Route::middleware(['auth', 'is_admin'])->group(function(){
+    Route::get('/route-2', function(){
+        return 'masuk ke route 2, halaman khusus admin';
+    });
 });
 
 Auth::routes();
