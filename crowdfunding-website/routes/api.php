@@ -44,4 +44,5 @@ Route::group([
     //     ]);
     // });
     Route::get('show', 'ProfileController@index');
+    Route::post('update', 'ProfileController@update');
 });

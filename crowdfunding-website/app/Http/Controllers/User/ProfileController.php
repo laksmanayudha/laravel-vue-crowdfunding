@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -51,10 +52,32 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // public function update(Request $request, $id)
+    // {
+    //     //
+    // }
+
+    public function update(Request $request)
     {
-        //
+
+        $request->validate([
+            'name' => 'required'
+        ]);
+
+        $user = auth()->user();
+        User::where('email', $user->email)->update([
+            'name' => $request->name
+        ]);
+
+        $updateUser = User::where('email', $user->email)->first();
+
+        return response()->json([
+            'response_code' => '00',
+            'response_message' => 'berhasil update profile user',
+            'data' => $updateUser
+        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
