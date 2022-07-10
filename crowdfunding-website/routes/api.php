@@ -34,11 +34,14 @@ Route::group([
 });
 
 Route::group([
+    'prefix' => 'profile',
+    'namespace' => 'User',
     'middleware' => ['email_verified', 'auth:api']
 ], function(){
-    Route::get('test', function () {
-        return response()->json([
-            'message' => 'test auth token'
-        ]);
-    });
+    // Route::get('test', function () {
+    //     return response()->json([
+    //         'message' => 'test auth token'
+    //     ]);
+    // });
+    Route::get('show', 'ProfileController@index');
 });
