@@ -61,12 +61,39 @@ class ProfileController extends Controller
     {
 
         $request->validate([
-            'name' => 'required'
+            'name' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
+        // persiapkan field yang akan di update
         $user = auth()->user();
+        $profile_folder = "profile_images";
+
+        // cek user name baru
+        $name = $request->name === null ? $user->name : $request->name;
+        $imageName = $user->photo_profile;
+
+        // cek image baru
+        if ( $request->image != null ){
+            // hapus image di local storage jika ada
+            if ( $imageName != null ){
+                unlink(public_path() . DIRECTORY_SEPARATOR . $imageName);
+            }
+
+            // buat nama images baru
+            $imageName = time() . "." . $request->image->extension();
+
+            // simpan images baru di local storage
+            $request->image->move(public_path($profile_folder), $imageName);
+
+            // path image yang disimpan  pada database
+            $imageName = $profile_folder . DIRECTORY_SEPARATOR . $imageName;
+        }
+
+        // update ke database
         User::where('email', $user->email)->update([
-            'name' => $request->name
+            'name' => $name,
+            "photo_profile" => $imageName
         ]);
 
         $updateUser = User::where('email', $user->email)->first();
