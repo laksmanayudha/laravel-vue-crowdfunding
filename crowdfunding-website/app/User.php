@@ -2,13 +2,15 @@
 
 namespace App;
 
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\UsesUuid;
 use Carbon\Carbon;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -49,9 +51,9 @@ class User extends Authenticatable
             $model->role_id = $model->get_role_user();
         });
 
-        // static::creating(function($model){
-        //     $model->generate_otp_code();
-        // });
+        static::created(function($model){
+            $model->generate_otp_code();
+        });
     }
 
     public function get_role_user()
@@ -75,6 +77,27 @@ class User extends Authenticatable
                 'valid_until' => $now->addMinutes(5),
             ]
         );
+    }
+
+    // JWT token
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 
     // realationship

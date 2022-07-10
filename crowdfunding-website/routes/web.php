@@ -14,20 +14,20 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/route-1', function(){
-    return 'masuk ke route 1, email sudah di verifikasi';
-})->middleware(['auth', 'email_verified']);
+// Route::get('/route-1', function(){
+//     return 'masuk ke route 1, email sudah di verifikasi';
+// })->middleware(['auth', 'email_verified']);
 
-Route::middleware(['auth', 'email_verified', 'is_admin'])->group(function(){
-    Route::get('/route-2', function(){
-        return 'masuk ke route 2, halaman khusus admin';
-    });
-});
+// Route::middleware(['auth', 'email_verified', 'is_admin'])->group(function(){
+//     Route::get('/route-2', function(){
+//         return 'masuk ke route 2, halaman khusus admin';
+//     });
+// });
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');

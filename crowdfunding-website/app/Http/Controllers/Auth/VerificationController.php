@@ -3,40 +3,56 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
+use App\User;
+use App\Otp_code;
+use Carbon\Carbon;
 
 class VerificationController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Email Verification Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling email verification for any
-    | user that recently registered with the application. Emails may also
-    | be re-sent if the user didn't receive the original email message.
-    |
-    */
-
-    use VerifiesEmails;
-
     /**
-     * Where to redirect users after verification.
+     * Handle the incoming request.
      *
-     * @var string
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function __invoke(Request $request)
     {
-        $this->middleware('auth');
-        $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
+        $request->validate([
+            'otp' => 'required'
+        ]);
+
+        // cek jika ada otp code
+        $otp_code = Otp_code::where('otp', $request->otp)->first();
+        if(!$otp_code){
+            return response()->json([
+                'response_code' => '01',
+                'response_message' => 'OTP code tidak ditemukan'
+            ], 400);
+        }
+
+        // cek jika waktu otp code masih valid
+        $now = Carbon::now();
+        if($now > $otp_code->valid_until){
+            return response()->json([
+                'response_code' => '01',
+                'response_message' => 'Kode OTP sudah tidak berlaku, silahkan generate ulang'
+            ], 400);
+        }
+
+        // update email yang terverifikasi
+        $user = User::find($otp_code->user_id);
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+
+        // hapus otp code yang sudah tidak dipakai
+        $otp_code->delete();
+
+        $data['user'] = $user;
+        return response()->json([
+            'response_code' => '00',
+            'response_message' => 'user berhasil terverifikasi',
+            'data' => $data
+        ], 200);
     }
 }
