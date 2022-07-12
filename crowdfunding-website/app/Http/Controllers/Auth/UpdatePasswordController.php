@@ -25,6 +25,7 @@ class UpdatePasswordController extends Controller
             'password' => bcrypt(request('password'))
         ]);
 
+        
         return response()->json([
             'response_code' => '00',
             'response_message' => 'response berhasil diubah'

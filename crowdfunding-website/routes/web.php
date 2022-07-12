@@ -31,3 +31,7 @@ use Illuminate\Support\Facades\Auth;
 // Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
+
+// Route::get('/test', function(){
+//     return view('send_mail_user_registered');
+// });
