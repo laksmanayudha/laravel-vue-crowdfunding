@@ -56,7 +56,9 @@
                 },
                 handleDelete: function(e){
                     const deletedIndex = e.target.value;
-                    this.users = this.users.filter( (item, index) => index != deletedIndex );
+                    if ( confirm('hapus data ?') ){
+                        this.users = this.users.filter( (item, index) => index != deletedIndex );
+                    }
                 },
                 handleUpdate: function(e){
                     this.updateIndex = e.target.value;
