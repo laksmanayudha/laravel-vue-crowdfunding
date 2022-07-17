@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizz 2</title>
+</head>
+<body>
+    <div id="app">
+        <h1>
+            <form class="input" v-on:submit.prevent="handleSubmit">
+                <input size="50" type="text" v-model:value="inputText"> <button>{{ saveButtonText }}</button>
+            </form>
+            <div class="list">
+                <ul>
+                    <li v-for="(user, index) in users"> {{ user.name }} 
+                        <button :value="index" @click.prevent="handleUpdate">edit</button> || 
+                        <button v-bind:value="index" v-on:click.prevent="handleDelete">delete</button>
+                    </li>
+                </ul>
+            </div>
+        </h1>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                users: [
+                    { 'name' : 'Muhammad Iqbal Mubarok' },
+                    { 'name' : 'Ruby Purwanti' },
+                    { 'name' : 'Faqih Muhammad' },
+                ],
+                saveButtonText: 'add',
+                inputText: '',
+                updateIndex: null
+            },
+            methods: {
+                handleSubmit: function(){
+
+                    if ( this.inputText.trim() ){  
+                        
+                        if( this.updateIndex != null ){
+                            this.users[this.updateIndex].name = this.inputText;
+                        }else{                            
+                            this.users = [...this.users, { 'name' : this.inputText }],
+                            this.inputText = ''
+                        }
+                    }
+
+                    this.saveButtonText = 'add'
+                    this.inputText = ''
+                    this.updateIndex = null
+                },
+                handleDelete: function(e){
+                    const deletedIndex = e.target.value;
+                    this.users = this.users.filter( (item, index) => index != deletedIndex );
+                },
+                handleUpdate: function(e){
+                    this.updateIndex = e.target.value;
+                    this.inputText = this.users[this.updateIndex].name
+                    this.saveButtonText = 'update'
+                }
+            }
+        })
+    </script>
+</body>
+</html>
