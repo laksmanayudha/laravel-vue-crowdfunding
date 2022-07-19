@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX Request</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        form{
+            padding: 20px;
+            background-color: rgb(49, 49, 49);
+            color: white;
+            max-width: 500px;
+        }
+
+        input, textarea{
+            width: 100%;
+            padding: .5em;
+        }
+
+        textarea{
+            height: 200px;
+        }
+
+        table{
+            border-collapse: collapse;
+        }
+
+        th, td{
+            border: 1px solid rgb(194, 194, 194);
+            padding: 20px;
+        }
+
+        th{
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <form v-on:submit.prevent="submitForm($event)">
+            <div>
+                <label>Name: </label><br>
+                <input type="text" name="name" ref="name" v-model="name">
+            </div><br>
+            <div>
+                <label>Address: </label><br>
+                <input type="text" name="address" ref="address" v-model="address">
+            </div><br>
+            <div>
+                <label>Phone Number: </label><br>
+                <input type="text" name="no_hp" ref="no_hp" v-model="no_hp">
+            </div><br>
+            <input type="submit" value="SUBMIT">
+        </form>
+
+        <br><br>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>image</th>
+                    <th>name</th>
+                    <th>address</th>
+                    <th>no hp</th>
+                    <th>action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="member of members">
+                    <td><img width="100" v-bind:src="member.photo_profile ? photoDomain + member.photo_profile : 'https://dummyimage.com/16:9x1080'" alt=""></td>
+                    <td> {{ member.name }} </td>
+                    <td>{{ member.address }}</td>
+                    <td>{{ member.no_hp }}</td>
+                    <td>
+                        <button>edit</button>
+                        <button @click="deleteData(member.id)">delete</button>
+                        <button>upload photo</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- script -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                members: [],
+                photoDomain: 'http://demo-api-vue.sanbercloud.com',
+                errors: [],
+                name: '',
+                no_hp: '',
+                address: ''
+            },
+            methods: {
+                deleteData: function(id){
+                    const config = {
+                        method: 'post',
+                        url: `http://demo-api-vue.sanbercloud.com/api/member/${id}?_method=DELETE`
+                    };
+
+                    axios( config )
+                    .then(res => {
+                        this.getData()
+                        alert(res.data.message)
+                    })
+                    .catch(er => console.log(er))
+                },
+                submitForm: function(e){
+                    const formData = new FormData()
+
+                    formData.append('name', this.name)
+                    formData.append('address', this.address)
+                    formData.append('no_hp', this.no_hp)
+
+                    const config = {
+                        method: 'post',
+                        url: 'http://demo-api-vue.sanbercloud.com/api/member',
+                        data: formData
+                    };
+
+                    axios( config )
+                    .then(res => {
+                        this.getData()
+                        this.clearForm()
+                        alert(res.data.message)
+                    })
+                    .catch(er => console.log(er))
+                },
+                clearForm: function(){
+                    this.name = ''
+                    this.address = ''
+                    this.no_hp = ''
+                },
+                getData: function(){
+
+                    const config = {
+                        method: 'get',
+                        url: 'http://demo-api-vue.sanbercloud.com/api/member'
+                    };
+
+                    axios( config )
+                    .then(res => {this.members = res.data.members})
+                    .catch(er => console.log(er))
+                }
+            },
+            created(){
+                this.getData();
+            }
+        })
+    </script>
+</body>
+</html>
