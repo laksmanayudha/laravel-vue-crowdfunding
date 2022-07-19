@@ -44,17 +44,29 @@
         <form v-on:submit.prevent="submitForm($event)">
             <div>
                 <label>Name: </label><br>
-                <input type="text" name="name" ref="name" v-model="name">
+                <input type="text" name="name" ref="name" v-model="name" v-bind:disabled="buttonStatus === 'upload'">
             </div><br>
             <div>
                 <label>Address: </label><br>
-                <input type="text" name="address" ref="address" v-model="address">
+                <input type="text" name="address" ref="address" v-model="address" v-bind:disabled="buttonStatus === 'upload'">
             </div><br>
             <div>
                 <label>Phone Number: </label><br>
-                <input type="text" name="no_hp" ref="no_hp" v-model="no_hp">
+                <input type="text" name="no_hp" ref="no_hp" v-model="no_hp" v-bind:disabled="buttonStatus === 'upload'">
             </div><br>
-            <input type="submit" value="SUBMIT">
+            <div v-if="buttonStatus == 'update'">
+                <input type="submit" value="UPDATE">
+                <input type="reset" @click="clearForm" value="CANCEL">
+            </div>
+            <div v-else-if="buttonStatus == 'submit'">
+                <input type="submit" value="SUBMIT">
+            </div>
+            <div v-else-if="buttonStatus == 'upload'">
+                <input type="file" name="photo_profile" ref="photo_profile">
+                <input type="submit" value="UPLAOD">
+                <input type="reset" @click="clearForm" value="CANCEL">
+
+            </div>
         </form>
 
         <br><br>
@@ -76,9 +88,9 @@
                     <td>{{ member.address }}</td>
                     <td>{{ member.no_hp }}</td>
                     <td>
-                        <button>edit</button>
+                        <button @click="editData(member.id)">edit</button>
                         <button @click="deleteData(member.id)">delete</button>
-                        <button>upload photo</button>
+                        <button @click="uploadPhoto(member.id)">upload photo</button>
                     </td>
                 </tr>
             </tbody>
@@ -97,9 +109,53 @@
                 errors: [],
                 name: '',
                 no_hp: '',
-                address: ''
+                address: '',
+                buttonStatus: 'submit',
+                updatedId: null,
+                updatePhotoId: null
             },
             methods: {
+                validateForm: function(){
+
+                },
+                uploadPhoto: function(id){
+
+                    this.clearForm()
+
+                    const config = {
+                        method: 'get',
+                        url: `http://demo-api-vue.sanbercloud.com/api/member/${id}`
+                    }
+                    
+                    axios( config )
+                    .then( res => {
+                        let data = res.data.member
+                        this.name = data.name
+                        this.address = data.address
+                        this.no_hp = data.no_hp
+                        this.buttonStatus = 'upload'
+                        this.updatePhotoId = id
+                    })
+                    .catch( er => console.log(er) )
+                },
+                editData: function(id){
+                    this.clearForm()
+                    const config = {
+                        method: 'get',
+                        url: `http://demo-api-vue.sanbercloud.com/api/member/${id}`
+                    }
+
+                    axios( config )
+                    .then( res => {
+                        let data = res.data.member
+                        this.name = data.name
+                        this.address = data.address
+                        this.no_hp = data.no_hp
+                        this.buttonStatus = 'update'
+                        this.updatedId = id
+                    })
+                    .catch( er => console.log(er) )
+                },
                 deleteData: function(id){
                     const config = {
                         method: 'post',
@@ -109,6 +165,7 @@
                     axios( config )
                     .then(res => {
                         this.getData()
+                        this.clearForm()
                         alert(res.data.message)
                     })
                     .catch(er => console.log(er))
@@ -120,24 +177,64 @@
                     formData.append('address', this.address)
                     formData.append('no_hp', this.no_hp)
 
-                    const config = {
-                        method: 'post',
-                        url: 'http://demo-api-vue.sanbercloud.com/api/member',
-                        data: formData
-                    };
+                    if( this.updatedId != null ){
+                        const config = {
+                            method: 'post',
+                            url: `http://demo-api-vue.sanbercloud.com/api/member/${this.updatedId}`,
+                            params: {_method: 'PUT'},
+                            data: formData
+                        };
 
-                    axios( config )
-                    .then(res => {
-                        this.getData()
-                        this.clearForm()
-                        alert(res.data.message)
-                    })
-                    .catch(er => console.log(er))
+                        axios( config )
+                        .then(res => {
+                            this.getData()
+                            alert(res.data.message)
+                        })
+                        .catch(er => console.log(er))
+
+                    }else if( this.updatePhotoId != null ){
+                        
+                        let photo = this.$refs.photo_profile.files[0]
+                        let formData = new FormData()
+                        formData.append('photo_profile', photo)
+
+                        const config = {
+                            method: 'post',
+                            url: `http://demo-api-vue.sanbercloud.com/api/member/${this.updatePhotoId}/upload-photo-profile`,
+                            data: formData
+                        };
+
+                        axios( config )
+                        .then(res => {
+                            this.getData()
+                            alert(res.data.message)
+                        })
+                        .catch(er => console.log(er))
+                    }else{
+                        const config = {
+                            method: 'post',
+                            url: 'http://demo-api-vue.sanbercloud.com/api/member',
+                            data: formData
+                        };
+
+                        axios( config )
+                        .then(res => {
+                            this.getData()
+                            alert(res.data.message)
+                        })
+                        .catch(er => console.log(er))
+                    }
+
+                    this.clearForm()
+
                 },
                 clearForm: function(){
                     this.name = ''
                     this.address = ''
                     this.no_hp = ''
+                    this.buttonStatus = 'submit'
+                    this.updatePhotoId = null
+                    this.updatedId = null
                 },
                 getData: function(){
 
