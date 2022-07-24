@@ -61,12 +61,13 @@
             <v-spacer></v-spacer>
 
             <v-btn icon>
-                <v-badge color="orange" overlap>
+                <v-badge color="orange" overlap v-if="donation">
                     <template v-slot:badge>
-                        <span>3</span>
+                        <span>{{ donation }}</span>
                     </template>
                     <v-icon>mdi-cash-multiple</v-icon>
                 </v-badge>
+                <v-icon v-else>mdi-cash-multiple</v-icon>
             </v-btn>
 
             <v-text-field
@@ -88,12 +89,13 @@
             <v-spacer></v-spacer>
 
             <v-btn icon>
-                <v-badge color="orange" overlap>
+                <v-badge color="orange" overlap v-if="donation">
                     <template v-slot:badge>
-                        <span>3</span>
+                        <span>{{ donation }}</span>
                     </template>
                     <v-icon>mdi-cash-multiple</v-icon>
                 </v-badge>
+                <v-icon v-else>mdi-cash-multiple</v-icon>
             </v-btn>
 
             <v-text-field
@@ -144,6 +146,9 @@
         computed: {
             isHome(){
                 return (this.$route.path === '/' || this.$route.paht === '/home')
+            },
+            donation(){
+                return this.$store.state.donationCount
             }
         }
     }

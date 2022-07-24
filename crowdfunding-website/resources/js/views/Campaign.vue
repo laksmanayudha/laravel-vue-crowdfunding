@@ -63,7 +63,8 @@
                     })
             },
             donate(){
-                alert('donate')
+                // alert('donate')
+                this.$store.commit('addDonationCount')
             }
         },
         created(){
