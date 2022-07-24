@@ -46,3 +46,21 @@ Route::group([
     Route::get('show', 'ProfileController@index');
     Route::post('update', 'ProfileController@update');
 });
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'campaign'
+], function(){
+    Route::get('random/{count}', 'CampaignController@random');
+    Route::post('store', 'CampaignController@store');
+    Route::get('/', 'CampaignController@index');
+    Route::get('/{id}', 'CampaignController@detail');
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'blog'
+], function(){
+    Route::get('random/{count}', 'BlogController@random');
+    Route::post('store', 'BlogController@store');
+});

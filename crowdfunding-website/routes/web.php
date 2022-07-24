@@ -35,3 +35,14 @@ use Illuminate\Support\Facades\Auth;
 // Route::get('/test', function(){
 //     return view('send_mail_user_registered');
 // });
+
+
+// Route::get('/', function(){
+//     return view('app');
+// });
+
+// Route::get('/{any?}', function(){
+//     return 'masuk ke sini';
+// })->where('any', '.*');
+
+Route::view('/{any?}', 'app')->where('any', '.*');

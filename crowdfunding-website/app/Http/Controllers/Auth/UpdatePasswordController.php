@@ -28,7 +28,7 @@ class UpdatePasswordController extends Controller
         
         return response()->json([
             'response_code' => '00',
-            'response_message' => 'response berhasil diubah'
+            'response_message' => 'password berhasil diubah'
         ], 200);
     }
 }
