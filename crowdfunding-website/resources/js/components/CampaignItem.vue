@@ -35,7 +35,7 @@
         props: ['campaign'],
         computed: {
             progress(){
-                return (this.campaign.collected / this.campaign.required * 100)
+                return (this.campaign.collected / this.campaign.required * 100).toFixed(2)
             }
         }
     }

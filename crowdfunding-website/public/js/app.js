@@ -2023,8 +2023,24 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'App',
+  components: {
+    Alert: function Alert() {
+      return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./components/Alert.vue */ "./resources/js/components/Alert.vue"));
+    },
+    Search: function Search() {
+      return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ./components/Search.vue */ "./resources/js/components/Search.vue"));
+    }
+  },
   data: function data() {
     return {
       drawer: false,
@@ -2037,15 +2053,20 @@ __webpack_require__.r(__webpack_exports__);
         icon: 'mdi-hand-heart',
         route: '/campaigns'
       }],
-      guest: false
+      guest: false,
+      dialog: false
     };
   },
-  computed: {
+  computed: _objectSpread({
     isHome: function isHome() {
-      return this.$route.path === '/' || this.$route.paht === '/home';
-    },
-    donation: function donation() {
-      return this.$store.state.donationCount;
+      return this.$route.path === '/' || this.$route.path === '/home';
+    }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+    'transactions': 'transaction/transactions'
+  })),
+  methods: {
+    closeDialog: function closeDialog(value) {
+      this.dialog = value;
     }
   }
 });
@@ -2067,7 +2088,24 @@ var render = function render() {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("v-app", [_c("v-navigation-drawer", {
+  return _c("v-app", [_c("alert"), _vm._v(" "), _c("v-dialog", {
+    attrs: {
+      fullscreen: "",
+      "hide-overlay": "",
+      transition: "scale-transition"
+    },
+    model: {
+      value: _vm.dialog,
+      callback: function callback($$v) {
+        _vm.dialog = $$v;
+      },
+      expression: "dialog"
+    }
+  }, [_c("search", {
+    on: {
+      closed: _vm.closeDialog
+    }
+  })], 1), _vm._v(" "), _c("v-navigation-drawer", {
     attrs: {
       app: ""
     },
@@ -2150,7 +2188,7 @@ var render = function render() {
     attrs: {
       icon: ""
     }
-  }, [_vm.donation ? _c("v-badge", {
+  }, [_vm.transactions > 0 ? _c("v-badge", {
     attrs: {
       color: "orange",
       overlap: ""
@@ -2158,10 +2196,10 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "badge",
       fn: function fn() {
-        return [_c("span", [_vm._v(_vm._s(_vm.donation))])];
+        return [_c("span", [_vm._v(_vm._s(_vm.transactions))])];
       },
       proxy: true
-    }], null, false, 686131638)
+    }], null, false, 3421690297)
   }, [_vm._v(" "), _c("v-icon", [_vm._v("mdi-cash-multiple")])], 1) : _c("v-icon", [_vm._v("mdi-cash-multiple")])], 1), _vm._v(" "), _c("v-text-field", {
     attrs: {
       slot: "extension",
@@ -2171,6 +2209,11 @@ var render = function render() {
       label: "Search",
       "prepend-inner-icon": "mdi-magnify",
       "solo-inverted": ""
+    },
+    on: {
+      click: function click($event) {
+        _vm.dialog = true;
+      }
     },
     slot: "extension"
   })], 1) : _c("v-app-bar", {
@@ -2193,7 +2236,7 @@ var render = function render() {
     attrs: {
       icon: ""
     }
-  }, [_vm.donation ? _c("v-badge", {
+  }, [_vm.transactions > 0 ? _c("v-badge", {
     attrs: {
       color: "orange",
       overlap: ""
@@ -2201,22 +2244,11 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "badge",
       fn: function fn() {
-        return [_c("span", [_vm._v(_vm._s(_vm.donation))])];
+        return [_c("span", [_vm._v(_vm._s(_vm.transactions))])];
       },
       proxy: true
-    }], null, false, 686131638)
-  }, [_vm._v(" "), _c("v-icon", [_vm._v("mdi-cash-multiple")])], 1) : _c("v-icon", [_vm._v("mdi-cash-multiple")])], 1), _vm._v(" "), _c("v-text-field", {
-    attrs: {
-      slot: "extension",
-      "hide-details": "",
-      "append-icon": "mdi-microphone",
-      flat: "",
-      label: "Search",
-      "prepend-inner-icon": "mdi-magnify",
-      "solo-inverted": ""
-    },
-    slot: "extension"
-  })], 1), _vm._v(" "), _c("v-main", [_c("v-container", {
+    }], null, false, 3421690297)
+  }, [_vm._v(" "), _c("v-icon", [_vm._v("mdi-cash-multiple")])], 1) : _c("v-icon", [_vm._v("mdi-cash-multiple")])], 1)], 1), _vm._v(" "), _c("v-main", [_c("v-container", {
     attrs: {
       fluid: ""
     }
@@ -101080,10 +101112,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _router_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router.js */ "./resources/js/router.js");
-/* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
-/* harmony import */ var _plugins_vuetify_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./plugins/vuetify.js */ "./resources/js/plugins/vuetify.js");
-/* harmony import */ var _bootstrap_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./bootstrap.js */ "./resources/js/bootstrap.js");
-/* harmony import */ var _bootstrap_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_bootstrap_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
+/* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
+/* harmony import */ var _plugins_vuetify_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./plugins/vuetify.js */ "./resources/js/plugins/vuetify.js");
+/* harmony import */ var _bootstrap_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./bootstrap.js */ "./resources/js/bootstrap.js");
+/* harmony import */ var _bootstrap_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_bootstrap_js__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -101091,23 +101125,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
-  state: {
-    donationCount: 0
-  },
-  mutations: {
-    addDonationCount: function addDonationCount(state) {
-      state.donationCount++;
-    }
-  }
-});
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   router: _router_js__WEBPACK_IMPORTED_MODULE_2__["default"],
-  vuetify: _plugins_vuetify_js__WEBPACK_IMPORTED_MODULE_4__["default"],
-  store: store,
+  vuetify: _plugins_vuetify_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+  store: _store_js__WEBPACK_IMPORTED_MODULE_3__["default"],
   components: {
-    App: _App_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+    App: _App_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
   }
 });
 
@@ -101217,31 +101241,31 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     name: 'home',
     alias: '/home',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./views/Home.vue */ "./resources/js/views/Home.vue"));
+      return __webpack_require__.e(/*! import() */ 6).then(__webpack_require__.bind(null, /*! ./views/Home.vue */ "./resources/js/views/Home.vue"));
     }
   }, {
     path: '/donations',
     name: 'donations',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ./views/Donations.vue */ "./resources/js/views/Donations.vue"));
+      return __webpack_require__.e(/*! import() */ 5).then(__webpack_require__.bind(null, /*! ./views/Donations.vue */ "./resources/js/views/Donations.vue"));
     }
   }, {
     path: '/blogs',
     name: 'blogs',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ./views/Blogs.vue */ "./resources/js/views/Blogs.vue"));
+      return __webpack_require__.e(/*! import() */ 7).then(__webpack_require__.bind(null, /*! ./views/Blogs.vue */ "./resources/js/views/Blogs.vue"));
     }
   }, {
     path: '/campaigns',
     name: 'campaigns',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./views/Campaigns.vue */ "./resources/js/views/Campaigns.vue"));
+      return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ./views/Campaigns.vue */ "./resources/js/views/Campaigns.vue"));
     }
   }, {
     path: '/campaign/:id',
     name: 'campaign.',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./views/Campaign.vue */ "./resources/js/views/Campaign.vue"));
+      return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./views/Campaign.vue */ "./resources/js/views/Campaign.vue"));
     }
   }, {
     path: '*',
@@ -101249,6 +101273,106 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   }]
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
+
+/***/ }),
+
+/***/ "./resources/js/store.js":
+/*!*******************************!*\
+  !*** ./resources/js/store.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _stores_transaction_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stores/transaction.js */ "./resources/js/stores/transaction.js");
+/* harmony import */ var _stores_alert_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./stores/alert.js */ "./resources/js/stores/alert.js");
+
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  modules: {
+    // 'transaction' : transaction,
+    transaction: _stores_transaction_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+    alert: _stores_alert_js__WEBPACK_IMPORTED_MODULE_3__["default"]
+  }
+}));
+
+/***/ }),
+
+/***/ "./resources/js/stores/alert.js":
+/*!**************************************!*\
+  !*** ./resources/js/stores/alert.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {
+    status: false,
+    color: 'success',
+    text: ''
+  },
+  mutations: {
+    set: function set(state, payload) {
+      state.status = payload.status, state.text = payload.text, state.color = payload.color;
+    }
+  },
+  actions: {
+    set: function set(_ref, payload) {
+      var commit = _ref.commit;
+      commit('set', payload);
+    }
+  },
+  getters: {
+    status: function status(state) {
+      return state.status;
+    },
+    color: function color(state) {
+      return state.color;
+    },
+    text: function text(state) {
+      return state.text;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/stores/transaction.js":
+/*!********************************************!*\
+  !*** ./resources/js/stores/transaction.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {
+    transactions: 0
+  },
+  mutations: {
+    insert: function insert(state, payload) {
+      state.transactions++;
+    }
+  },
+  actions: {},
+  getters: {
+    transactions: function transactions(state) {
+      return state.transactions;
+    }
+  }
+});
 
 /***/ }),
 

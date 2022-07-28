@@ -1,6 +1,14 @@
 <template>
     <v-app>
 
+        <!-- alert -->
+        <alert></alert>
+
+        <!-- search dialog -->
+        <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
+            <search @closed="closeDialog" />
+        </v-dialog>
+
         <!-- sidebar -->
         <v-navigation-drawer app v-model="drawer">
             <v-list>
@@ -61,9 +69,9 @@
             <v-spacer></v-spacer>
 
             <v-btn icon>
-                <v-badge color="orange" overlap v-if="donation">
+                <v-badge color="orange" overlap v-if="transactions > 0">
                     <template v-slot:badge>
-                        <span>{{ donation }}</span>
+                        <span>{{ transactions }}</span>
                     </template>
                     <v-icon>mdi-cash-multiple</v-icon>
                 </v-badge>
@@ -78,8 +86,10 @@
                 label="Search"
                 prepend-inner-icon="mdi-magnify"
                 solo-inverted
+                @click="dialog = true"
             ></v-text-field>
         </v-app-bar>
+        
         <v-app-bar app color="success" dark v-else>
             <v-btn icon @click.stop="$router.go(-1)">
                 <v-icon>mdi-arrow-left</v-icon>
@@ -89,24 +99,14 @@
             <v-spacer></v-spacer>
 
             <v-btn icon>
-                <v-badge color="orange" overlap v-if="donation">
+                <v-badge color="orange" overlap v-if="transactions > 0">
                     <template v-slot:badge>
-                        <span>{{ donation }}</span>
+                        <span>{{ transactions }}</span>
                     </template>
                     <v-icon>mdi-cash-multiple</v-icon>
                 </v-badge>
                 <v-icon v-else>mdi-cash-multiple</v-icon>
             </v-btn>
-
-            <v-text-field
-                slot="extension"
-                hide-details
-                append-icon="mdi-microphone"
-                flat
-                label="Search"
-                prepend-inner-icon="mdi-magnify"
-                solo-inverted
-            ></v-text-field>
         </v-app-bar>
 
         <!-- content -->
@@ -133,8 +133,14 @@
     </v-app>
 </template>
 <script>
+    import { mapGetters } from 'vuex'
+
     export default {
         name: 'App',
+        components: {
+            Alert   : () => import('./components/Alert.vue'),
+            Search  : () => import('./components/Search.vue')
+        },
         data: () => ({
             drawer: false,
             menus: [
@@ -142,13 +148,22 @@
                 { title: 'Campaigns', icon: 'mdi-hand-heart', route: '/campaigns' },
             ],
             guest: false,
+            dialog: false
         }),
         computed: {
             isHome(){
-                return (this.$route.path === '/' || this.$route.paht === '/home')
+                return (this.$route.path === '/' || this.$route.path === '/home')
             },
-            donation(){
-                return this.$store.state.donationCount
+            ...mapGetters({
+                'transactions': 'transaction/transactions'
+            })
+            // transaction(){
+            //     return this.$store.getters.transaction
+            // }
+        },
+        methods: {
+            closeDialog(value){
+                this.dialog = value
             }
         }
     }
