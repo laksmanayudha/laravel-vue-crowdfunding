@@ -2,6 +2,8 @@
 
 Learning Laravel and Vue.
 
+Link Video dan screenshot: https://drive.google.com/drive/folders/136QH1GZ4vysCUbYEhuNY-nvuWAMwpBQu?usp=sharing
+
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
